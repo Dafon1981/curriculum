@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Interactivo | Manuel Da'fonseca</title>
+    
+    <!-- Google Fonts (Poppins) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (para iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ======== CONFIGURACIÓN GENERAL Y VARIABLES ======== */
+        :root {
+            --bg-light: #ffffff;
+            --bg-dark: #f0f0f0;
+            --text-dark: #333333;
+            --text-light: #555555;
+            --primary-yellow: #ffdd00; /* Un amarillo más vibrante para la web */
+            --accent-gray: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Línea decorativa debajo de los títulos */
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-yellow);
+            margin: 10px auto 0;
+        }
+
+        /* ======== 1. ENCABEZADO (HERO) ======== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            animation: fadeInScaleUp 1s ease-out forwards;
+        }
+
+        .profile-pic-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--bg-light);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 0 auto 20px;
+        }
+
+        .profile-pic-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .hero-lines {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            width: 4px;
+            height: 100px;
+            background-color: var(--primary-yellow);
+            transform: translateY(-50%);
+            animation: drawLine 1s 0.5s ease-out forwards;
+            transform-origin: top;
+            transform: scaleY(0);
+        }
+        .hero-lines::after {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            width: 4px;
+            height: 100px;
+            background-color: var(--primary-yellow);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            animation: bounce 2s infinite;
+        }
+
+        /* ======== 2. SECCIONES GENERALES Y ANIMACIÓN DE SCROLL ======== */
+        section {
+            background-color: var(--bg-light);
+            border-top: 1px solid var(--accent-gray);
+        }
+        section:nth-of-type(even) {
+            background-color: var(--bg-dark);
+        }
+
+        /* Clase para animación de scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ======== 3. HABILIDADES ======== */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .skill-tag {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: 1px solid var(--accent-gray);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .skill-tag:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* ======== 4. EXPERIENCIA (LÍNEA DE TIEMPO) ======== */
+        .timeline {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: var(--primary-yellow);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            animation: drawLineScroll linear;
+            animation-timeline: view(); /* Animación basada en scroll, soportada en navegadores modernos */
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+        }
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+        }
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            text-align: left;
+        }
+        .timeline-dot {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--bg-light);
+            border: 4px solid var(--primary-yellow);
+            top: 20px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-item:nth-child(odd) .timeline-dot {
+            right: -8px;
+        }
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -8px;
+        }
+        .timeline-content {
+            padding: 20px;
+            background-color: var(--bg-dark);
+            border-radius: 8px;
+        }
+        .timeline-content h3 {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+        }
+        .timeline-sub {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* ======== 5. SOFTWARE ======== */
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        .software-card {
+            background: var(--bg-dark);
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .software-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .software-card i {
+            font-size: 3rem;
+            color: var(--primary-yellow);
+            margin-bottom: 10px;
+        }
+        .software-card span {
+            display: block;
+            font-weight: 600;
+        }
+
+        /* ======== 6. EDUCACIÓN (ACORDEÓN) ======== */
+        .accordion {
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid var(--accent-gray);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 15px 20px;
+            background-color: var(--bg-dark);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .accordion-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-align: left;
+        }
+        .accordion-header h2::after {
+            display: none;
+        }
+        .accordion-header i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        .accordion-header.active i {
+            transform: rotate(45deg);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            background: var(--bg-light);
+            padding: 0 20px;
+        }
+        .education-item {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--accent-gray);
+        }
+        .education-item:last-child {
+            border-bottom: none;
+        }
+        .education-item h3 {
+            font-size: 1.1rem;
+        }
+
+        /* ======== 7. CONTACTO (FOOTER) ======== */
+        footer#contact {
+            background-color: var(--text-dark);
+            color: var(--bg-light);
+            text-align: center;
+        }
+        footer h2 {
+            color: var(--bg-light);
+        }
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .contact-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-yellow);
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+            min-width: 250px;
+            text-align: center;
+        }
+        .contact-button:hover {
+            transform: scale(1.05);
+            background-color: #ffd000;
+        }
+        .contact-button i {
+            margin-right: 10px;
+        }
+        #dni-copy {
+            position: relative;
+            overflow: hidden;
+        }
+        #dni-feedback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #28a745; /* Verde de éxito */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        #dni-copy.copied #dni-feedback {
+            transform: translateY(0);
+        }
+
+        /* ======== ANIMACIONES KEYFRAMES ======== */
+        @keyframes fadeInScaleUp {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes drawLine {
+            to {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes drawLineScroll {
+            from { transform: scaleY(0); }
+            to { transform: scaleY(1); }
+        }
+
+        /* ======== MEDIA QUERIES PARA MÓVIL ======== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero .subtitle { font-size: 1rem; }
+
+            .timeline::after {
+                left: 20px;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 50px;
+                padding-right: 10px;
+                left: 0 !important;
+                text-align: left !important;
+            }
+            .timeline-dot {
+                left: 12px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======== 1. ENCABEZADO (HERO SECTION) ======== -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="profile-pic-container">
+                <!-- IMAGEN ACTUALIZADA -->
+                <img src="https://raw.githubusercontent.com/Dafon1981/curriculum/main/fiiit.jpg" alt="Foto de Manuel Da'fonseca">
+            </div>
+            <h1>Manuel Da'fonseca</h1>
+            <p class="subtitle">Diseñador Digital y Modelado 3D</p>
+            <div class="hero-lines"></div>
+        </div>
+        <div class="scroll-down">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <main>
+        <!-- ======== 2. ACERCA DE MÍ ======== -->
+        <section id="about" class="container reveal">
+            <h2>Acerca de Mí</h2>
+            <p>
+                Soy un profesional en Computación e Informática con experiencia en diseño digital y modelado 3D. He desarrollado habilidades en inteligencia artificial y chatbots, creando soluciones interactivas y mejorando la atención al cliente.
+                Me adapto rápidamente y aprendo continuamente sobre tecnologías emergentes, manteniéndome actualizado en un campo en constante cambio.
+            </p>
+        </section>
+
+        <!-- ======== 3. HABILIDADES ======== -->
+        <section id="skills" class="container reveal">
+            <h2>Habilidades</h2>
+            <div class="skills-container">
+                <span class="skill-tag">Experiencia</span>
+                <span class="skill-tag">Comunicación asertiva</span>
+                <span class="skill-tag">Gestión de activos</span>
+                <span class="skill-tag">Resolución de problemas</span>
+                <span class="skill-tag">Elaboración de informes</span>
+                <span class="skill-tag">Trabajo en equipo</span>
+            </div>
+        </section>
+
+        <!-- ======== 4. EXPERIENCIA LABORAL ======== -->
+        <section id="experience" class="container reveal">
+            <h2>Experiencia Laboral</h2>
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Auxiliar de Administrativo</h3>
+                        <p class="timeline-sub">Archivo de Seguros | Hospital Cayetano Heredia</p>
+                        <p class="timeline-date">Nov. 2024 - 2025</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Freelance</h3>
+                        <p class="timeline-sub">Diseño</p>
+                        <p class="timeline-date">2016 - Presente</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Diseñador imprenta</h3>
+                        <p class="timeline-sub">Delsolart</p>
+                        <p class="timeline-date">2009 - 2016</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== 5. SOFTWARES ======== -->
+        <section id="software" class="container reveal">
+            <h2>Softwares</h2>
+            <div class="software-grid">
+                <div class="software-card reveal">
+                    <i class="fa-brands fa-adobe"></i>
+                    <span>Adobe Suite</span>
+                </div>
+                <div class="software-card reveal">
+                    <i class="fas fa-cube"></i>
+                    <span>3d Max</span>
+                </div>
+                <div class="software-card reveal">
+                    <i class="fas fa-brain"></i>
+                    <span>Edición con IA</span>
+                </div>
+                <div class="software-card reveal">
+                    <i class="fas fa-comments"></i>
+                    <span>Chat IA</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== 6. EDUCACIÓN (ACORDEÓN) ======== -->
+        <section id="education" class="container reveal">
+            <div class="accordion">
+                <button class="accordion-header">
+                    <h2>Educación</h2>
+                    <i class="fas fa-plus"></i>
+                </button>
+                <div class="accordion-content">
+                    <div class="education-item">
+                        <h3>Universidad Peruana de los Andes</h3>
+                        <p>Ingeniería de Sistemas (Inconcluso)</p>
+                    </div>
+                    <div class="education-item">
+                        <h3>CESCA</h3>
+                        <p>Computación e informatica (1997 - 2000)</p>
+                    </div>
+                     <div class="education-item">
+                        <h3>Secundaria</h3>
+                    </div>
+                     <div class="education-item">
+                        <h3>Primaria</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== 7. CONTACTO ======== -->
+        <footer id="contact" class="container reveal">
+            <h2>¿Hablemos?</h2>
+            <div class="contact-links">
+                <!-- BOTÓN DE WHATSAPP AÑADIDO -->
+                <a href="https://wa.me/51967188120" class="contact-button" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-brands fa-whatsapp"></i> Enviar WhatsApp
+                </a>
+                <a href="tel:967188120" class="contact-button">
+                    <i class="fas fa-phone"></i> Llamar al 967 188 120
+                </a>
+                <a href="mailto:dafon1981@gmail.com" class="contact-button">
+                    <i class="fas fa-envelope"></i> Enviar Correo
+                </a>
+                <div id="dni-copy" class="contact-button" data-dni="41435757" title="Toca para copiar">
+                    <span id="dni-content">
+                        <i class="fas fa-id-card"></i> DNI: 41435757
+                    </span>
+                    <span id="dni-feedback" class="hidden-feedback">¡Copiado!</span>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // 1. ANIMACIÓN DE SCROLL CON INTERSECTION OBSERVER
+            const revealElements = document.querySelectorAll('.reveal');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Opcional: Desconectar el observador para que la animación no se repita
+                        // observer.unobserve(entry.target); 
+                    }
+                });
+            }, {
+                threshold: 0.1 // La animación se activa cuando el 10% del elemento es visible
+            });
+
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+
+
+            // 2. LÓGICA DEL ACORDEÓN DE EDUCACIÓN
+            const accordionHeader = document.querySelector('.accordion-header');
+
+            if (accordionHeader) {
+                accordionHeader.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const accordionContent = this.nextElementSibling;
+
+                    if (accordionContent.style.maxHeight) {
+                        accordionContent.style.maxHeight = null;
+                        accordionContent.style.padding = '0 20px';
+                    } else {
+                        // Añadimos el padding antes de calcular el scrollHeight
+                        accordionContent.style.padding = '15px 20px';
+                        accordionContent.style.maxHeight = accordionContent.scrollHeight + "px";
+                    }
+                });
+            }
+
+
+            // 3. LÓGICA PARA COPIAR DNI AL PORTAPAPELES
+            const dniElement = document.getElementById('dni-copy');
+
+            if (dniElement) {
+                dniElement.addEventListener('click', function() {
+                    const dni = this.dataset.dni;
+                    
+                    // Usamos la API del portapapeles (moderna y segura)
+                    navigator.clipboard.writeText(dni).then(() => {
+                        // Feedback visual para el usuario
+                        this.classList.add('copied');
+
+                        // Revertir el estado después de 2 segundos
+                        setTimeout(() => {
+                            this.classList.remove('copied');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Error al copiar el DNI: ', err);
+                        alert('No se pudo copiar el DNI.');
+                    });
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>
